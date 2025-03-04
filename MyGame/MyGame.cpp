@@ -1,6 +1,7 @@
 ﻿#include "SFML/Graphics.hpp"
 #include <iostream>
-#include <unordered_map>
+
+
 
 struct KeyMapping {
     sf::Keyboard::Scancode key;
@@ -14,26 +15,27 @@ std::vector<KeyMapping> keyMappings = {
         {sf::Keyboard::Scan::S, {0.f, 1.f}}
 };
 
-void GetRectangleOnCircle(sf::RectangleShape &rectangle, sf::CircleShape &circle) {
-    sf::Vector2f circleCenter = circle.getPosition() + sf::Vector2f(circle.getRadius() * 2, circle.getRadius());
+/*void getRectangleOnCircle(sf::RectangleShape& rectangle, sf::CircleShape& circle) {
+    sf::Vector2f circleCenter = circle.getPosition() + sf::Vector2f(circle.getRadius(), .0f);
     rectangle.setPosition(circleCenter - sf::Vector2f(rectangle.getSize().x, rectangle.getSize().y / 2));
-}
+}*/
 
 int main()
 {
     constexpr float SPEED = 200.0f;
+    constexpr float ROTATE_SPEED = .1f;
+
     int w = 600; int h = 600;
     sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
     sf::Clock clock;
 
-    sf::RectangleShape rectShape({25.f, 25.f});
-    rectShape.setFillColor(sf::Color::Cyan);
+    sf::RectangleShape rectShape({30.f, 75.f});
+    rectShape.setOrigin(rectShape.getSize().x / 2, rectShape.getSize().y / 2);
+    rectShape.setPosition({100.f, 100.f});
 
-    sf::CircleShape circleShape(150.f);
-    circleShape.setFillColor(sf::Color::Blue);
-
-    GetRectangleOnCircle(rectShape, circleShape);
-
+    sf::Texture playerTexture;
+    playerTexture.loadFromFile("sprites/test_texture.jpg");
+    rectShape.setTexture(&playerTexture);
     
 
     while (window.isOpen())
@@ -73,14 +75,16 @@ int main()
         if (magnitude != 0.f) {
             movement /= magnitude;
             movement *= SPEED * dt;
-            circleShape.move(movement);
-            GetRectangleOnCircle(rectShape, circleShape);
+            rectShape.move(movement);
         }
 #pragma endregion
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::E)) {
+            //rotate
+        }
+
 
         window.clear();
-        window.draw(circleShape);
         window.draw(rectShape);
         window.display();
     }
