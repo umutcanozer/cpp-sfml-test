@@ -2,22 +2,27 @@
 #include <iostream>
 #include "Player.h"
 
+sf::Texture idleTexture;
+sf::Texture walkTexture;
+
+sf::Clock tickClock;
 
 int main()
 {
-    int w = 600; int h = 600;
+    //currently not working as i wanted
+    int w = 800; int h = 600;
     sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
-    sf::Clock clock;
-
-    sf::Texture playerTexture;
-    playerTexture.loadFromFile("sprites/test_texture.jpg");
     
-    Player player(&playerTexture ,150.f);
+    idleTexture.loadFromFile("soldier_sprites/_Idle.png");
+    walkTexture.loadFromFile("soldier_sprites/_Run.png");
+    //idle anim has 10 sprites
+    //running anim has 10 sprites
+    Player player(&idleTexture, &walkTexture, 10, .2f, 250.f);
 
     while (window.isOpen())
     {
         sf::Event event;
-        sf::Time time = clock.restart();
+        sf::Time time = tickClock.restart();
         float dt = time.asSeconds();
 
         while (window.pollEvent(event))
