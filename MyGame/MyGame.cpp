@@ -9,15 +9,26 @@ sf::Clock tickClock;
 
 int main()
 {
-    //currently not working as i wanted
     int w = 800; int h = 600;
     sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
     
     idleTexture.loadFromFile("soldier_sprites/_Idle.png");
     walkTexture.loadFromFile("soldier_sprites/_Run.png");
-    //idle anim has 10 sprites
-    //running anim has 10 sprites
-    Player player(&idleTexture, &walkTexture, 10, .2f, 250.f);
+    Player player(&idleTexture, &walkTexture, 125.f);
+
+
+    sf::Font font;
+    sf::Text text;
+
+    if (!font.loadFromFile("arimo.ttf")) {
+        std::cerr << "Font yüklenemedi!" << std::endl;
+        return -1;
+    }
+
+    text.setFont(font); 
+    text.setCharacterSize(30);
+    text.setFillColor(sf::Color::White);
+    text.setPosition(100, 100);
 
     while (window.isOpen())
     {
@@ -45,9 +56,10 @@ int main()
         }
        
         player.Update(dt);
-
+        text.setString("Current state: " + player.GetPlayerState());
         window.clear();
         player.Draw(window);
+        window.draw(text);
         window.display();
     }
 }

@@ -3,6 +3,7 @@
 #include "Animation.h"
 #include <unordered_map>
 
+
 enum class PlayerState {
 	Idle,
 	Walk
@@ -11,11 +12,13 @@ enum class PlayerState {
 class Player
 {
 public:
-	Player(sf::Texture* idleTexture, sf::Texture* walkTexture, unsigned int imageCount, float switchTime, float movementSpeed);
+	Player(sf::Texture* idleTexture, sf::Texture* walkTexture, float movementSpeed);
 	~Player();
 	
 	void Update(float deltaTime);
 	void Draw(sf::RenderWindow& window);
+
+	std::string GetPlayerState();
 
 private:
 	float movementSpeed;
@@ -32,6 +35,7 @@ private:
 	std::vector<KeyMapping> keyMappings;
 
 	PlayerState playerState;
+	PlayerState previousState;
 	std::unordered_map<PlayerState, sf::Texture*> stateTextures;
 };
 

@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(sf::Texture* idleTexture, sf::Texture* walkTexture, unsigned int imageCount, float switchTime, float movementSpeed)
+Player::Player(sf::Texture* idleTexture, sf::Texture* walkTexture, float movementSpeed)
 {
     stateTextures[PlayerState::Idle] = idleTexture;
     stateTextures[PlayerState::Walk] = walkTexture;
@@ -14,7 +14,7 @@ Player::Player(sf::Texture* idleTexture, sf::Texture* walkTexture, unsigned int 
 
     playerState = PlayerState::Idle;
     currentTexture = *stateTextures[playerState];
-    playerAnimation.SetTexture(idleTexture, 4, 0.2f);
+    playerAnimation.SetTexture(&currentTexture, 10, 0.2f);
 
     this->movementSpeed = movementSpeed;
     faceRight = true;
@@ -23,9 +23,11 @@ Player::Player(sf::Texture* idleTexture, sf::Texture* walkTexture, unsigned int 
     body.setScale({ 2.f, 2.f });
     body.setPosition({ 100.f, 100.f });
     body.setTexture(&currentTexture);
+
+    previousState = PlayerState::Idle;
 }
 
-PlayerState previousState = PlayerState::Idle;
+
 
 void Player::Update(float deltaTime)
 {
@@ -55,6 +57,8 @@ void Player::Update(float deltaTime)
     }
 
     if (playerState != previousState) {
+        currentTexture = *stateTextures[playerState];
+        body.setTexture(&currentTexture);
         playerAnimation.SetTexture(stateTextures[playerState], 10, 0.2f);
         previousState = playerState;
     }
@@ -69,6 +73,14 @@ void Player::Draw(sf::RenderWindow& window)
     window.draw(body);
 }
 
+std::string Player::GetPlayerState()
+{
+    switch (playerState) {
+        case PlayerState::Idle: return "Idle";
+        case PlayerState::Walk: return "Walk";
+        default: return "Unknown";
+    }
+}
 
 Player::~Player()
 {
