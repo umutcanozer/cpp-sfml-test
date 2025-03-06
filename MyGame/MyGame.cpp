@@ -7,28 +7,50 @@ sf::Texture walkTexture;
 
 sf::Clock tickClock;
 
-int main()
-{
-    int w = 800; int h = 600;
-    sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
-    
-    idleTexture.loadFromFile("soldier_sprites/_Idle.png");
-    walkTexture.loadFromFile("soldier_sprites/_Run.png");
-    Player player(&idleTexture, &walkTexture, 125.f);
+const float VIEW_HEIGHT = 512.f;
+
+void ResizeView(const sf::RenderWindow& window, sf::View& view) {
+    float aspectRatio = float(window.getSize().x / float(window.getSize().y));
+    view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
+}
+
+void MouseWheelEvent(const sf::Event& e) {
+    if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+        std::cout << "wheel type: vertical" << std::endl;
+    else if (e.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel)
+        std::cout << "wheel type: horizontal" << std::endl;
 
 
-    sf::Font font;
-    sf::Text text;
+    std::cout << "wheel movement: " << e.mouseWheelScroll.delta << std::endl;
+    std::cout << "mouse x: " << e.mouseWheelScroll.x << std::endl;
+    std::cout << "mouse y: " << e.mouseWheelScroll.y << std::endl;
+}
 
+sf::Text DisplayText(sf::Text& text, sf::Font& font) {
     if (!font.loadFromFile("arimo.ttf")) {
         std::cerr << "Font yüklenemedi!" << std::endl;
-        return -1;
+        return text;
     }
 
-    text.setFont(font); 
+    text.setFont(font);
     text.setCharacterSize(30);
     text.setFillColor(sf::Color::White);
-    text.setPosition(100, 100);
+    text.setPosition({ 0.f, 0.f });
+
+    return text;
+}
+
+int main()
+{
+    int w = 1200; int h = 800;
+    sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
+    sf::View gameView(sf::Vector2f(0.f, 0.f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
+    sf::Text stateText;
+    sf::Font fontText;
+
+    Player player(125.f);
+
+    
 
     while (window.isOpen())
     {
@@ -38,28 +60,28 @@ int main()
 
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+
+            switch (event.type) {
+            case sf::Event::Closed:
                 window.close();
-#pragma region mousewheel 
-            if (event.type == sf::Event::MouseWheelScrolled) {
-                if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
-                    std::cout << "wheel type: vertical" << std::endl;
-                else if (event.mouseWheelScroll.wheel == sf::Mouse::HorizontalWheel)
-                    std::cout << "wheel type: horizontal" << std::endl;
-
-
-                std::cout << "wheel movement: " << event.mouseWheelScroll.delta << std::endl;
-                std::cout << "mouse x: " << event.mouseWheelScroll.x << std::endl;
-                std::cout << "mouse y: " << event.mouseWheelScroll.y << std::endl;
-            }
-#pragma endregion
+                break;
+            case sf::Event::MouseWheelScrolled:
+                MouseWheelEvent(event);
+                break;
+            case sf::Event::Resized:
+                ResizeView(window, gameView);
+                break;
+            }      
         }
        
         player.Update(dt);
-        text.setString("Current state: " + player.GetPlayerState());
+        gameView.setCenter(player.GetPosition());
+        stateText.setString("Current state: " + player.GetPlayerState());
+
         window.clear();
+        window.setView(gameView);
         player.Draw(window);
-        window.draw(text);
+        window.draw(DisplayText(stateText, fontText));
         window.display();
     }
 }

@@ -1,9 +1,10 @@
 #include "Player.h"
 
-Player::Player(sf::Texture* idleTexture, sf::Texture* walkTexture, float movementSpeed)
+Player::Player(float movementSpeed)
 {
-    stateTextures[PlayerState::Idle] = idleTexture;
-    stateTextures[PlayerState::Walk] = walkTexture;
+    SetTextures();
+    stateTextures[PlayerState::Idle] = &idleTexture;
+    stateTextures[PlayerState::Walk] = &walkTexture;
 
     keyMappings = {
         {sf::Keyboard::Key::A, {-1.f, 0.f}},
@@ -19,10 +20,11 @@ Player::Player(sf::Texture* idleTexture, sf::Texture* walkTexture, float movemen
     this->movementSpeed = movementSpeed;
     faceRight = true;
 
-    body.setSize(sf::Vector2f(120.f, 80.f));
+    body.setSize(sf::Vector2f(60.f, 40.f));
     body.setScale({ 2.f, 2.f });
     body.setPosition({ 100.f, 100.f });
     body.setTexture(&currentTexture);
+    body.setOrigin(body.getSize().x / 2, body.getSize().y / 1);
 
     previousState = PlayerState::Idle;
 }
@@ -59,7 +61,7 @@ void Player::Update(float deltaTime)
     if (playerState != previousState) {
         currentTexture = *stateTextures[playerState];
         body.setTexture(&currentTexture);
-        playerAnimation.SetTexture(stateTextures[playerState], 10, 0.2f);
+        playerAnimation.SetTexture(stateTextures[playerState], 10, 0.1f);
         previousState = playerState;
     }
 
@@ -71,6 +73,12 @@ void Player::Update(float deltaTime)
 void Player::Draw(sf::RenderWindow& window)
 {
     window.draw(body);
+}
+
+void Player::SetTextures()
+{
+    idleTexture.loadFromFile("soldier_sprites/_Idle.png");
+    walkTexture.loadFromFile("soldier_sprites/_Run.png");
 }
 
 std::string Player::GetPlayerState()

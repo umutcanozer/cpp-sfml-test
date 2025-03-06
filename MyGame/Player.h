@@ -12,17 +12,22 @@ enum class PlayerState {
 class Player
 {
 public:
-	Player(sf::Texture* idleTexture, sf::Texture* walkTexture, float movementSpeed);
+	Player(float movementSpeed);
 	~Player();
 	
 	void Update(float deltaTime);
 	void Draw(sf::RenderWindow& window);
 
-	std::string GetPlayerState();
+	void SetTextures();
 
+	std::string GetPlayerState();
+	sf::Vector2f GetPosition() { return body.getPosition(); };
 private:
 	float movementSpeed;
 	sf::RectangleShape body;
+
+	sf::Texture idleTexture;
+	sf::Texture walkTexture;
 	sf::Texture currentTexture;
 
 	Animation playerAnimation;
