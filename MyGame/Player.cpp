@@ -16,15 +16,22 @@ Player::Player(float movementSpeed)
     playerState = PlayerState::Idle;
     currentTexture = *stateTextures[playerState];
     playerAnimation.SetTexture(&currentTexture, 10, 0.2f);
-
+     
     this->movementSpeed = movementSpeed;
     faceRight = true;
 
-    body.setSize(sf::Vector2f(60.f, 40.f));
-    body.setScale({ 2.f, 2.f });
-    body.setPosition({ 100.f, 100.f });
+    body.setSize({120.f, 160.f});
+    body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
+    body.setPosition({ 0.f, 0.f });
     body.setTexture(&currentTexture);
-    body.setOrigin(body.getSize().x / 2, body.getSize().y / 1);
+
+
+    hitbox.setSize(sf::Vector2f(20.f, 80.f));
+    hitbox.setOrigin(hitbox.getSize().x / 2, hitbox.getSize().y / 2);
+    hitbox.setPosition(body.getPosition());
+    hitbox.setFillColor(sf::Color::Transparent);  
+    hitbox.setOutlineColor(sf::Color::Red);      
+    hitbox.setOutlineThickness(2.f);
 
     previousState = PlayerState::Idle;
 }
@@ -67,12 +74,15 @@ void Player::Update(float deltaTime)
 
     playerAnimation.Update(deltaTime, faceRight);
     body.setTextureRect(playerAnimation.animRect);
+	float xOffset = faceRight ? +5.f : -5.f;
+	hitbox.setPosition({ body.getPosition().x - xOffset, body.getPosition().y + 40.f});
 #pragma endregion
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {
     window.draw(body);
+	window.draw(hitbox);
 }
 
 void Player::SetTextures()

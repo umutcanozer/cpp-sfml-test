@@ -25,6 +25,7 @@ public:
 private:
 	float movementSpeed;
 	sf::RectangleShape body;
+	sf::RectangleShape hitbox;
 
 	sf::Texture idleTexture;
 	sf::Texture walkTexture;

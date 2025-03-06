@@ -1,13 +1,13 @@
 ﻿#include "SFML/Graphics.hpp"
 #include <iostream>
 #include "Player.h"
+#include "Platform.h"
 
 sf::Texture idleTexture;
 sf::Texture walkTexture;
-
 sf::Clock tickClock;
 
-const float VIEW_HEIGHT = 512.f;
+static const float VIEW_HEIGHT = 512.f;
 
 void ResizeView(const sf::RenderWindow& window, sf::View& view) {
     float aspectRatio = float(window.getSize().x / float(window.getSize().y));
@@ -49,7 +49,7 @@ int main()
     sf::Font fontText;
 
     Player player(125.f);
-
+    Platform platform1(sf::Vector2f(100.f, 20.f), gameView.getCenter());
     
 
     while (window.isOpen())
@@ -57,7 +57,7 @@ int main()
         sf::Event event;
         sf::Time time = tickClock.restart();
         float dt = time.asSeconds();
-
+  
         while (window.pollEvent(event))
         {
 
@@ -73,7 +73,17 @@ int main()
                 break;
             }      
         }
-       
+
+        /*
+        sf::RectangleShape bounds;
+        bounds.setFillColor(sf::Color::Transparent);
+        bounds.setOutlineColor(sf::Color::Red);
+        bounds.setOutlineThickness(2.0f);
+
+        sf::FloatRect globalBounds = player.GetHitbox().getGlobalBounds();
+        bounds.setPosition(globalBounds.left, globalBounds.top);
+        bounds.setSize(sf::Vector2f(globalBounds.width, globalBounds.height));*/
+      
         player.Update(dt);
         gameView.setCenter(player.GetPosition());
         stateText.setString("Current state: " + player.GetPlayerState());
@@ -81,6 +91,7 @@ int main()
         window.clear();
         window.setView(gameView);
         player.Draw(window);
+        platform1.Draw(window);
         window.draw(DisplayText(stateText, fontText));
         window.display();
     }
