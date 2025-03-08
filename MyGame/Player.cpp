@@ -1,6 +1,7 @@
 #include "Player.h"
 
-Player::Player(float movementSpeed)
+Player::Player(float movementSpeed) :
+	playerCollider(body)
 {
     SetTextures();
     stateTextures[PlayerState::Idle] = &idleTexture;
@@ -20,18 +21,13 @@ Player::Player(float movementSpeed)
     this->movementSpeed = movementSpeed;
     faceRight = true;
 
-    body.setSize({120.f, 160.f});
+    body.setSize({80.f, 160.f});
     body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
     body.setPosition({ 0.f, 0.f });
     body.setTexture(&currentTexture);
 
-
-    hitbox.setSize(sf::Vector2f(20.f, 80.f));
-    hitbox.setOrigin(hitbox.getSize().x / 2, hitbox.getSize().y / 2);
-    hitbox.setPosition(body.getPosition());
-    hitbox.setFillColor(sf::Color::Transparent);  
-    hitbox.setOutlineColor(sf::Color::Red);      
-    hitbox.setOutlineThickness(2.f);
+    body.setOutlineColor(sf::Color::Red);
+    body.setOutlineThickness(2.f);
 
     previousState = PlayerState::Idle;
 }
@@ -75,14 +71,12 @@ void Player::Update(float deltaTime)
     playerAnimation.Update(deltaTime, faceRight);
     body.setTextureRect(playerAnimation.animRect);
 	float xOffset = faceRight ? +5.f : -5.f;
-	hitbox.setPosition({ body.getPosition().x - xOffset, body.getPosition().y + 40.f});
 #pragma endregion
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {
     window.draw(body);
-	window.draw(hitbox);
 }
 
 void Player::SetTextures()

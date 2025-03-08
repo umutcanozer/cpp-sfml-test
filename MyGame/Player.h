@@ -1,7 +1,8 @@
 #pragma once
 #include "SFML/Graphics.hpp"
-#include "Animation.h"
 #include <unordered_map>
+#include "Animation.h"
+#include "Collider.h"
 
 
 enum class PlayerState {
@@ -22,10 +23,11 @@ public:
 
 	std::string GetPlayerState();
 	sf::Vector2f GetPosition() { return body.getPosition(); };
+	sf::RectangleShape GetBody() { return body; };
+	Collider& GetCollider() { return playerCollider; };
 private:
 	float movementSpeed;
 	sf::RectangleShape body;
-	sf::RectangleShape hitbox;
 
 	sf::Texture idleTexture;
 	sf::Texture walkTexture;
@@ -33,6 +35,8 @@ private:
 
 	Animation playerAnimation;
 	bool faceRight;
+
+	Collider playerCollider;
 
 	struct KeyMapping {
 		sf::Keyboard::Key key;

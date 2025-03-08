@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "Collider.h"
 
 class Platform
 {
@@ -9,7 +10,9 @@ public:
 
 	void Draw(sf::RenderWindow& window);
 	sf::RectangleShape GetBody() { return body; };
+	Collider& GetCollider() { return platformCollider; };
 private:
 	sf::RectangleShape body;
+	Collider platformCollider;
 };
 

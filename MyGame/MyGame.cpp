@@ -49,8 +49,7 @@ int main()
     sf::Font fontText;
 
     Player player(125.f);
-    Platform platform1(sf::Vector2f(100.f, 20.f), gameView.getCenter());
-    
+    Platform platform1(sf::Vector2f(500.f, 20.f), sf::Vector2f(0.f, 100.f));
 
     while (window.isOpen())
     {
@@ -74,24 +73,17 @@ int main()
             }      
         }
 
-        /*
-        sf::RectangleShape bounds;
-        bounds.setFillColor(sf::Color::Transparent);
-        bounds.setOutlineColor(sf::Color::Red);
-        bounds.setOutlineThickness(2.0f);
-
-        sf::FloatRect globalBounds = player.GetHitbox().getGlobalBounds();
-        bounds.setPosition(globalBounds.left, globalBounds.top);
-        bounds.setSize(sf::Vector2f(globalBounds.width, globalBounds.height));*/
       
         player.Update(dt);
         gameView.setCenter(player.GetPosition());
         stateText.setString("Current state: " + player.GetPlayerState());
 
+        platform1.GetCollider().CheckCollision(player.GetCollider(), 1.f);
+
         window.clear();
         window.setView(gameView);
-        player.Draw(window);
         platform1.Draw(window);
+        player.Draw(window);
         window.draw(DisplayText(stateText, fontText));
         window.display();
     }
