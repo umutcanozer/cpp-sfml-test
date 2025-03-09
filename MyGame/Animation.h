@@ -16,10 +16,7 @@ public:
 private:
 	unsigned int imageCount;
 	unsigned int currentImage;
-	
+
 	float totalTime;
 	float switchTime;
-
-	sf::Texture* texture;
 };
-

@@ -48,14 +48,18 @@ int main()
     sf::Text stateText;
     sf::Font fontText;
 
-    Player player(125.f);
-    Platform platform1(sf::Vector2f(500.f, 20.f), sf::Vector2f(0.f, 100.f));
+    Player player(125.f, 150.f);
+    Platform platform1(sf::Vector2f(500.f, 200.f), sf::Vector2f(0.f, 100.f));
+	sf::Vector2f direction;
 
     while (window.isOpen())
     {
         sf::Event event;
         sf::Time time = tickClock.restart();
         float dt = time.asSeconds();
+
+		if (dt > 1.f / 20.f)
+			dt = 1.f / 20.f;
   
         while (window.pollEvent(event))
         {
@@ -76,9 +80,10 @@ int main()
       
         player.Update(dt);
         gameView.setCenter(player.GetPosition());
-        stateText.setString("Current state: " + player.GetPlayerState());
+        stateText.setString("X velocity: "+std::to_string(player.GetPlayerVelocityX()) + "Y velocity: " + std::to_string(player.GetPlayerVelocityY()));
 
-        platform1.GetCollider().CheckCollision(player.GetCollider(), 1.f);
+		if (platform1.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
+			player.OnCollision(direction);
 
         window.clear();
         window.setView(gameView);

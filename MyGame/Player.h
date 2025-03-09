@@ -13,21 +13,28 @@ enum class PlayerState {
 class Player
 {
 public:
-	Player(float movementSpeed);
+	Player(float movementSpeed, float jumpHeight);
 	~Player();
-	
+
 	void Update(float deltaTime);
 	void Draw(sf::RenderWindow& window);
+	void OnCollision(sf::Vector2f direction);
 
 	void SetTextures();
 
 	std::string GetPlayerState();
 	sf::Vector2f GetPosition() { return body.getPosition(); };
 	sf::RectangleShape GetBody() { return body; };
+	float GetPlayerVelocityX() { return velocity.x; };
+	float GetPlayerVelocityY() { return velocity.y; };
 	Collider& GetCollider() { return playerCollider; };
 private:
 	float movementSpeed;
+	float jumpHeight;
+	bool canJump;
+
 	sf::RectangleShape body;
+	sf::Vector2f velocity;
 
 	sf::Texture idleTexture;
 	sf::Texture walkTexture;
@@ -48,4 +55,3 @@ private:
 	PlayerState previousState;
 	std::unordered_map<PlayerState, sf::Texture*> stateTextures;
 };
-

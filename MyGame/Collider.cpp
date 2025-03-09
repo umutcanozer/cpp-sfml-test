@@ -5,7 +5,7 @@ Collider::Collider(sf::RectangleShape& body) :
 {
 }
 
-bool Collider::CheckCollision(Collider& other, float force)
+bool Collider::CheckCollision(Collider& other, sf::Vector2f& direction, float force)
 {
 	/*
 	* Imagine we have 2 rectangles. We need to check if they are colliding.
@@ -31,12 +31,36 @@ bool Collider::CheckCollision(Collider& other, float force)
 	if (gapX < 0.f && gapY < 0.f) {
 		force = std::min(std::max(force, 0.f), 1.f);
 		if (gapX > gapY) {
-			Move(xDistance > 0 ? +gapX * (1.f - force) : -gapX * (1.f - force), 0.f);
-			other.Move(xDistance > 0 ? -gapX * force: gapX * force, 0.f);
+			if (xDistance > 0) {
+				Move(gapX * (1.f - force), 0.f);
+				other.Move(-gapX * force, 0.f);
+
+				direction.x = 1.f;
+				direction.y = 0.f;
+			}
+			else {
+				Move(-gapX * (1.f - force), 0.f);
+				other.Move(gapX * force, 0.f);
+
+				direction.x = -1.f;
+				direction.y = 0.f;
+			}
 		}
 		else {
-			Move(0.f, yDistance > 0 ? +gapY * (1.f - force) : -gapY * (1.f - force));
-			other.Move(0.f, yDistance > 0 ? -gapY * force : gapY * force);
+			if (yDistance > 0) {
+				Move(0.f, gapY * (1.f - force));
+				other.Move(0.f, -gapY * force);
+
+				direction.x = 0.f;
+				direction.y = 1.f;
+			}
+			else {
+				Move(0.f, -gapY * (1.f - force));
+				other.Move(0.f, gapY * force);
+
+				direction.x = 0.f;
+				direction.y = -1.f;
+			}
 		}
 		return true;
 	}
