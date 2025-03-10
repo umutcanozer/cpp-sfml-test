@@ -49,7 +49,11 @@ int main()
     sf::Font fontText;
 
     Player player(125.f, 150.f);
-    Platform platform1(sf::Vector2f(500.f, 200.f), sf::Vector2f(0.f, 100.f));
+    std::vector<Platform> platforms = {
+        {sf::Vector2f(500.f, 20.f), sf::Vector2f(0.f, 100.f)},
+        {sf::Vector2f(500.f, 20.f), sf::Vector2f(0.f, 25.f)}
+    };
+
 	sf::Vector2f direction;
 
     while (window.isOpen())
@@ -82,12 +86,17 @@ int main()
         gameView.setCenter(player.GetPosition());
         stateText.setString("X velocity: "+std::to_string(player.GetPlayerVelocityX()) + "Y velocity: " + std::to_string(player.GetPlayerVelocityY()));
 
-		if (platform1.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
-			player.OnCollision(direction);
+		for (auto& platform : platforms) {
+			if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
+				player.OnCollision(direction);
+		}
+
+		
 
         window.clear();
         window.setView(gameView);
-        platform1.Draw(window);
+		for (auto& platform : platforms)
+			platform.Draw(window);
         player.Draw(window);
         window.draw(DisplayText(stateText, fontText));
         window.display();
