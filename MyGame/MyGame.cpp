@@ -52,11 +52,10 @@ int main()
     platformTexture.loadFromFile("platform_sprites/box.png");
     //Player player(125.f, 150.f);
     std::vector<Platform> platforms = {
-        {sf::Vector2f(600.f, 100.f)}
+        {platformTexture, sf::Vector2f(600.f, 100.f)},
+        {platformTexture, sf::Vector2f(600.f, 25.f)}
     };
 
-	for (auto& platform : platforms) {
-		platform.SetTexture(&platformTexture);
 
 	sf::Vector2f direction;
 
@@ -102,7 +101,6 @@ int main()
         for (auto& platform : platforms) {
 				platform.Draw(window);
         }
-			
         //player.Draw(window);
         window.draw(DisplayText(stateText, fontText));
         window.display();
