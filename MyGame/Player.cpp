@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(float movementSpeed, float jumpHeight) :
-    playerCollider(body)
+    playerCollider(playerSprite)
 {
     SetTextures();
     stateTextures[PlayerState::Idle] = &idleTexture;
@@ -23,13 +23,11 @@ Player::Player(float movementSpeed, float jumpHeight) :
     faceRight = true;
 	canJump = true;
     
-	body.setSize({ 80.f, 100.f });
-    body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
-    body.setPosition({ 0.f, 0.f });
-    body.setTexture(&currentTexture);
+    playerSprite.setTexture(currentTexture);
 
-    body.setOutlineColor(sf::Color::Red);
-    body.setOutlineThickness(2.f);
+    playerSprite.setOrigin(currentTexture.getSize().x / 2.0f, currentTexture.getSize().y / 2.0f);
+
+    playerSprite.setPosition({ 0.f, 0.f });
 
     previousState = PlayerState::Idle;
 }
@@ -65,20 +63,29 @@ void Player::Update(float deltaTime)
 
     if (playerState != previousState) {
         currentTexture = *stateTextures[playerState];
-        body.setTexture(&currentTexture);
+        playerSprite.setTexture(currentTexture);
         playerAnimation.SetTexture(stateTextures[playerState], 10, 0.1f);
         previousState = playerState;
     }
 
     playerAnimation.Update(deltaTime, faceRight);
-    body.setTextureRect(playerAnimation.animRect);
-    body.move(velocity * deltaTime);
+    playerSprite.setTextureRect(playerAnimation.animRect);
+    playerSprite.move(velocity * deltaTime);
 #pragma endregion
+
+    sf::FloatRect bounds = playerSprite.getGlobalBounds();
+
+    rectangle.setSize(sf::Vector2f(bounds.width, bounds.height));
+    rectangle.setPosition(bounds.left, bounds.top);
+    rectangle.setFillColor(sf::Color::Transparent); 
+    rectangle.setOutlineColor(sf::Color::Red);      
+    rectangle.setOutlineThickness(2.f);
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {
-    window.draw(body);
+    window.draw(playerSprite);
+    window.draw(rectangle);
 }
 
 void Player::OnCollision(sf::Vector2f direction)

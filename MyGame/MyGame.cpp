@@ -48,11 +48,15 @@ int main()
     sf::Text stateText;
     sf::Font fontText;
 
-    Player player(125.f, 150.f);
+    sf::Texture platformTexture;
+    platformTexture.loadFromFile("platform_sprites/box.png");
+    //Player player(125.f, 150.f);
     std::vector<Platform> platforms = {
-        {sf::Vector2f(500.f, 20.f), sf::Vector2f(0.f, 100.f)},
-        {sf::Vector2f(500.f, 20.f), sf::Vector2f(0.f, 25.f)}
+        {sf::Vector2f(600.f, 100.f)}
     };
+
+	for (auto& platform : platforms) {
+		platform.SetTexture(&platformTexture);
 
 	sf::Vector2f direction;
 
@@ -82,22 +86,24 @@ int main()
         }
 
       
-        player.Update(dt);
-        gameView.setCenter(player.GetPosition());
-        stateText.setString("X velocity: "+std::to_string(player.GetPlayerVelocityX()) + "Y velocity: " + std::to_string(player.GetPlayerVelocityY()));
+        //player.Update(dt);
+        //gameView.setCenter(player.GetPosition());
+        //stateText.setString("X velocity: "+std::to_string(player.GetPlayerVelocityX()) + "Y velocity: " + std::to_string(player.GetPlayerVelocityY()));
 
-		for (auto& platform : platforms) {
+		/*for (auto& platform : platforms) {
 			if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
 				player.OnCollision(direction);
-		}
+		}*/
 
-		
+        
 
         window.clear();
-        window.setView(gameView);
-		for (auto& platform : platforms)
-			platform.Draw(window);
-        player.Draw(window);
+        //window.setView(gameView);
+        for (auto& platform : platforms) {
+				platform.Draw(window);
+        }
+			
+        //player.Draw(window);
         window.draw(DisplayText(stateText, fontText));
         window.display();
     }

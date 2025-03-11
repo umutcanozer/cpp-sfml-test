@@ -23,8 +23,8 @@ public:
 	void SetTextures();
 
 	std::string GetPlayerState();
-	sf::Vector2f GetPosition() { return body.getPosition(); };
-	sf::RectangleShape GetBody() { return body; };
+	sf::Vector2f GetPosition() { return playerSprite.getPosition(); };
+	sf::Sprite GetBody() { return playerSprite; };
 	float GetPlayerVelocityX() { return velocity.x; };
 	float GetPlayerVelocityY() { return velocity.y; };
 	Collider& GetCollider() { return playerCollider; };
@@ -33,9 +33,9 @@ private:
 	float jumpHeight;
 	bool canJump;
 
-	sf::RectangleShape body;
+	sf::Sprite playerSprite;
 	sf::Vector2f velocity;
-
+	sf::RectangleShape rectangle;
 	sf::Texture idleTexture;
 	sf::Texture walkTexture;
 	sf::Texture currentTexture;

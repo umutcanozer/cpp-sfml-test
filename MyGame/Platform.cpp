@@ -1,17 +1,24 @@
 #include "Platform.h"
-
-Platform::Platform(sf::Vector2f size, sf::Vector2f pos) :
-	platformCollider(body)
+#include <iostream>
+Platform::Platform(sf::Vector2f pos) :
+    platformCollider(spritePlatform)
 {
-    body.setSize(size);
-    body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
-    body.setPosition(pos);
-    body.setTexture(nullptr);
+    platformTexture.loadFromFile("platform_sprites/box.png");
+    spritePlatform.setTexture(platformTexture);
+
+    platformRect.width = platformTexture.getSize().x;
+    platformRect.height = platformTexture.getSize().y;
+    spritePlatform.setTextureRect(platformRect);
+
+    spritePlatform.setOrigin(platformRect.width / 2.0f, platformRect.height / 2.0f);
+    spritePlatform.setPosition(pos);
+
+    
 }
 
 void Platform::Draw(sf::RenderWindow& window)
 {
-	window.draw(body);
+	window.draw(spritePlatform);
 }
 
 Platform::~Platform()

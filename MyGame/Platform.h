@@ -5,14 +5,19 @@
 class Platform
 {
 public:
-	Platform(sf::Vector2f size, sf::Vector2f pos);
+	Platform(sf::Vector2f pos);
 	~Platform();
 
 	void Draw(sf::RenderWindow& window);
-	sf::RectangleShape GetBody() { return body; };
+	sf::Sprite GetBody() { return spritePlatform; };
 	Collider& GetCollider() { return platformCollider; };
+
+	void SetTexture(sf::Texture* texture) { spritePlatform.setTexture(*texture); };
 private:
-	sf::RectangleShape body;
+	sf::Sprite spritePlatform;
 	Collider platformCollider;
+
+	sf::IntRect platformRect;
+	sf::Texture platformTexture;
 };
 
