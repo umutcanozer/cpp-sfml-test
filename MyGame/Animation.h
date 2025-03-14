@@ -1,6 +1,16 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
+struct TextureConfig {
+	unsigned int imageCount;
+	float switchTime;
+	float width;
+	float height;
+	float xOffset;
+	float yOffset;
+	float gap;
+};
+
 class Animation
 {
 public:
@@ -8,10 +18,10 @@ public:
 	~Animation();
 
 	void Update(float deltaTime, bool faceRight);
-	void SetTexture(sf::Texture* texture, unsigned int imageCount, float switchTime);
+	void SetTexture(sf::Texture* texture, const TextureConfig& config);
 
 public:
-	sf::IntRect animRect;
+	sf::IntRect textureRect;
 
 private:
 	unsigned int imageCount;
@@ -19,4 +29,8 @@ private:
 
 	float totalTime;
 	float switchTime;
+
+	float xOffset;
+	float yOffset;
+	float gap;
 };

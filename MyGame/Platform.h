@@ -9,13 +9,14 @@ public:
 	~Platform();
 
 	void Draw(sf::RenderWindow& window);
+	
 	sf::Sprite GetBody() { return spritePlatform; };
 	Collider& GetCollider() { return platformCollider; };
 
 private:
 	sf::Sprite spritePlatform;
-	Collider platformCollider;
-
 	sf::IntRect platformRect;
+
+	Collider platformCollider;
 };
 

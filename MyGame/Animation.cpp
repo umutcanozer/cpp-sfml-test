@@ -4,15 +4,18 @@ Animation::Animation()
 {
 }
 
-void Animation::SetTexture(sf::Texture* texture, unsigned int imageCount, float switchTime) {
-	this->imageCount = imageCount;
-	this->switchTime = switchTime;
+void Animation::SetTexture(sf::Texture* texture, const TextureConfig& config) {
+	this->imageCount = config.imageCount;
+	this->switchTime = config.switchTime;
+	this->xOffset = config.xOffset;
+	this->yOffset = config.yOffset;
+	this->gap = config.gap;
 
 	totalTime = 0.f;
 	currentImage = 0;
 
-	animRect.width = texture->getSize().x / static_cast<float>(imageCount);
-	animRect.height = texture->getSize().y;
+	textureRect.width = config.width;
+	textureRect.height = config.height;
 }
 
 void Animation::Update(float deltaTime, bool faceRight)
@@ -26,15 +29,15 @@ void Animation::Update(float deltaTime, bool faceRight)
 		if (currentImage >= imageCount) currentImage = 0;
 	}
 
-	animRect.top = 0;
+	textureRect.top = 0;
 
 	if (faceRight) {
-		animRect.left = currentImage * abs(animRect.width);
-		animRect.width = abs(animRect.width);
+		textureRect.left = xOffset + (currentImage * gap);
+		textureRect.width = abs(textureRect.width);
 	}
 	else {
-		animRect.left = (currentImage + 1) * abs(animRect.width);
-		animRect.width = -abs(animRect.width);
+		textureRect.left = xOffset + ((currentImage) * gap) - textureRect.width;
+		textureRect.width = -abs(textureRect.width);
 	}
 
 }

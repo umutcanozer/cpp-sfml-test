@@ -1,7 +1,7 @@
 #include "Collider.h"
 
-Collider::Collider(sf::Sprite& spriteColl) : 
-	spriteColl(spriteColl)
+Collider::Collider(sf::Sprite& col) :
+	col(col)
 {
 }
 

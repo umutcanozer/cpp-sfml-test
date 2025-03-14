@@ -1,18 +1,14 @@
 ﻿#include "SFML/Graphics.hpp"
 #include <iostream>
-#include "Player.h"
 #include "Platform.h"
-
-sf::Texture idleTexture;
-sf::Texture walkTexture;
-sf::Clock tickClock;
+#include "PlayerTest.h"
 
 static const float VIEW_HEIGHT = 512.f;
 
 void ResizeView(const sf::RenderWindow& window, sf::View& view) {
     float aspectRatio = float(window.getSize().x / float(window.getSize().y));
     view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
-}
+} 
 
 void MouseWheelEvent(const sf::Event& e) {
     if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
@@ -45,38 +41,40 @@ int main()
     int w = 1200; int h = 800;
     sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
     sf::View gameView(sf::Vector2f(0.f, 0.f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
+    sf::Clock tickClock;
+
     sf::Text stateText;
     sf::Font fontText;
+    
+    PlayerTest playerTest(150.f, 200.f);
 
     sf::Texture platformTexture;
     platformTexture.loadFromFile("platform_sprites/box.png");
-    //Player player(125.f, 150.f);
     std::vector<Platform> platforms = {
-        {platformTexture, sf::Vector2f(600.f, 100.f)},
-        {platformTexture, sf::Vector2f(600.f, 25.f)}
+        {platformTexture, sf::Vector2f(0, 170.f)},
+        {platformTexture, sf::Vector2f(0, 25.f)}
     };
-
-
+    
 	sf::Vector2f direction;
 
     while (window.isOpen())
     {
-        sf::Event event;
+        sf::Event e;
+        
         sf::Time time = tickClock.restart();
-        float dt = time.asSeconds();
-
-		if (dt > 1.f / 20.f)
-			dt = 1.f / 20.f;
+        float deltaTime = time.asSeconds();
+		if (deltaTime > 1.f / 20.f)
+			deltaTime = 1.f / 20.f;
   
-        while (window.pollEvent(event))
+        while (window.pollEvent(e))
         {
 
-            switch (event.type) {
+            switch (e.type) {
             case sf::Event::Closed:
                 window.close();
                 break;
             case sf::Event::MouseWheelScrolled:
-                MouseWheelEvent(event);
+                MouseWheelEvent(e);
                 break;
             case sf::Event::Resized:
                 ResizeView(window, gameView);
@@ -84,24 +82,21 @@ int main()
             }      
         }
 
-      
-        //player.Update(dt);
-        //gameView.setCenter(player.GetPosition());
-        //stateText.setString("X velocity: "+std::to_string(player.GetPlayerVelocityX()) + "Y velocity: " + std::to_string(player.GetPlayerVelocityY()));
+		playerTest.Update(deltaTime);
+        gameView.setCenter(playerTest.GetPosition());
+        stateText.setString(playerTest.GetPlayerState());
 
-		/*for (auto& platform : platforms) {
-			if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
-				player.OnCollision(direction);
-		}*/
-
-        
+		for (auto& platform : platforms) {
+			if (platform.GetCollider().CheckCollision(playerTest.GetCollider(), direction, 1.f))
+                playerTest.OnCollision(direction);
+		}
 
         window.clear();
-        //window.setView(gameView);
+        window.setView(gameView);
         for (auto& platform : platforms) {
 				platform.Draw(window);
         }
-        //player.Draw(window);
+		playerTest.Draw(window);
         window.draw(DisplayText(stateText, fontText));
         window.display();
     }

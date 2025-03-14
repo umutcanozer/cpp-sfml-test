@@ -16,17 +16,17 @@ Player::Player(float movementSpeed, float jumpHeight) :
 
     playerState = PlayerState::Idle;
     currentTexture = *stateTextures[playerState];
-    playerAnimation.SetTexture(&currentTexture, 10, 0.2f);
+    //playerAnimation.SetTexture(&currentTexture, 10, 0.2f);
 
 	this->jumpHeight = jumpHeight;
     this->movementSpeed = movementSpeed;
     faceRight = true;
 	canJump = true;
     
+
     playerSprite.setTexture(currentTexture);
-
-    playerSprite.setOrigin(currentTexture.getSize().x / 2.0f, currentTexture.getSize().y / 2.0f);
-
+    
+    
     playerSprite.setPosition({ 0.f, 0.f });
 
     previousState = PlayerState::Idle;
@@ -64,28 +64,28 @@ void Player::Update(float deltaTime)
     if (playerState != previousState) {
         currentTexture = *stateTextures[playerState];
         playerSprite.setTexture(currentTexture);
-        playerAnimation.SetTexture(stateTextures[playerState], 10, 0.1f);
+        //playerAnimation.SetTexture(stateTextures[playerState], 10, 0.1f);
         previousState = playerState;
     }
 
     playerAnimation.Update(deltaTime, faceRight);
-    playerSprite.setTextureRect(playerAnimation.animRect);
+    playerSprite.setTextureRect(playerAnimation.textureRect);
     playerSprite.move(velocity * deltaTime);
 #pragma endregion
 
     sf::FloatRect bounds = playerSprite.getGlobalBounds();
 
-    rectangle.setSize(sf::Vector2f(bounds.width, bounds.height));
-    rectangle.setPosition(bounds.left, bounds.top);
-    rectangle.setFillColor(sf::Color::Transparent); 
-    rectangle.setOutlineColor(sf::Color::Red);      
-    rectangle.setOutlineThickness(2.f);
+    hitbox.setSize(sf::Vector2f(bounds.width, bounds.height));
+    hitbox.setPosition(bounds.left, bounds.top);
+    hitbox.setFillColor(sf::Color::Transparent);
+    hitbox.setOutlineColor(sf::Color::Red);
+    hitbox.setOutlineThickness(2.f);
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {
     window.draw(playerSprite);
-    window.draw(rectangle);
+    window.draw(hitbox);
 }
 
 void Player::OnCollision(sf::Vector2f direction)

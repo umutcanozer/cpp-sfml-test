@@ -35,7 +35,7 @@ private:
 
 	sf::Sprite playerSprite;
 	sf::Vector2f velocity;
-	sf::RectangleShape rectangle;
+	sf::RectangleShape hitbox;
 	sf::Texture idleTexture;
 	sf::Texture walkTexture;
 	sf::Texture currentTexture;
