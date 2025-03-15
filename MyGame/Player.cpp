@@ -100,7 +100,7 @@ void Player::OnCollision(sf::Vector2f direction)
 		velocity.x = 0.f;
 	}
 	if (direction.y < 0.f) {
-		velocity.y *= 0.f;
+		velocity.y = 0.f;
 		canJump = true;
 		playerState = PState::Idle;
 	}
