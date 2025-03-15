@@ -1,7 +1,7 @@
 ﻿#include "SFML/Graphics.hpp"
 #include <iostream>
 #include "Platform.h"
-#include "PlayerTest.h"
+#include "Player.h"
 
 static const float VIEW_HEIGHT = 512.f;
 
@@ -46,7 +46,7 @@ int main()
     sf::Text stateText;
     sf::Font fontText;
     
-    PlayerTest playerTest(150.f, 200.f);
+    Player playerTest(150.f, 200.f);
 
     sf::Texture platformTexture;
     platformTexture.loadFromFile("platform_sprites/box.png");
@@ -84,7 +84,7 @@ int main()
 
 		playerTest.Update(deltaTime);
         gameView.setCenter(playerTest.GetPosition());
-        stateText.setString(playerTest.GetPlayerState());
+        stateText.setString(std::to_string(playerTest.GetVelocityY()));
 
 		for (auto& platform : platforms) {
 			if (platform.GetCollider().CheckCollision(playerTest.GetCollider(), direction, 1.f))

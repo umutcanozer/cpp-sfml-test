@@ -1,57 +1,68 @@
 #pragma once
 #include "SFML/Graphics.hpp"
-#include <unordered_map>
-#include "Animation.h"
 #include "Collider.h"
+#include "Animation.h"
+#include <unordered_map>
 
+struct KeyMapping {
+	sf::Keyboard::Key key;
+	float direction;
+};
 
-enum class PlayerState {
+enum class PState {
 	Idle,
-	Walk
+	Walk,
+	Jump,
+	Fall
 };
 
 class Player
 {
 public:
-	Player(float movementSpeed, float jumpHeight);
+	Player(float movementSpeed, float jumpForce);
 	~Player();
 
 	void Update(float deltaTime);
 	void Draw(sf::RenderWindow& window);
 	void OnCollision(sf::Vector2f direction);
 
-	void SetTextures();
-
-	std::string GetPlayerState();
-	sf::Vector2f GetPosition() { return playerSprite.getPosition(); };
-	sf::Sprite GetBody() { return playerSprite; };
-	float GetPlayerVelocityX() { return velocity.x; };
-	float GetPlayerVelocityY() { return velocity.y; };
 	Collider& GetCollider() { return playerCollider; };
+	sf::Vector2f GetPosition() { return playerSprite.getPosition(); };
+	float GetVelocityY() { return velocity.y; };
+	std::string GetPlayerState();
+private:
+	void SetTexture();
+
 private:
 	float movementSpeed;
-	float jumpHeight;
+	float jumpForce;
+
 	bool canJump;
+	bool faceRight;
+
+	float xOffset;
+	float yOffset;
 
 	sf::Sprite playerSprite;
 	sf::Vector2f velocity;
-	sf::RectangleShape hitbox;
+
+	sf::RectangleShape test;
+
 	sf::Texture idleTexture;
 	sf::Texture walkTexture;
-	sf::Texture currentTexture;
-
-	Animation playerAnimation;
-	bool faceRight;
+	sf::Texture jumpTexture;
+	sf::Texture fallTexture;
+	sf::Texture* currentTexture;
 
 	Collider playerCollider;
 
-	struct KeyMapping {
-		sf::Keyboard::Key key;
-		sf::Vector2f direction;
-	};
+	Animation playerAnimation;
+	TextureConfig animConfig;
+
 	std::vector<KeyMapping> keyMappings;
 
-	PlayerState playerState;
-	PlayerState previousState;
-	std::unordered_map<PlayerState, sf::Texture*> stateTextures;
+	PState playerState;
+	PState previousState;
+	std::unordered_map<PState, sf::Texture*> stateTextures;
 };
+
