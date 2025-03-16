@@ -5,16 +5,17 @@
 class Platform
 {
 public:
-	Platform(sf::Texture& texture, sf::Vector2f pos);
+	Platform(sf::Vector2f pos);
 	~Platform();
 
 	void Draw(sf::RenderWindow& window);
 	
-	sf::Sprite GetBody() { return spritePlatform; };
+	sf::Sprite GetBody() { return platformSprite; };
 	Collider& GetCollider() { return platformCollider; };
 
 private:
-	sf::Sprite spritePlatform;
+	sf::Sprite platformSprite;
+	static sf::Texture platformTexture;
 	sf::IntRect platformRect;
 
 	Collider platformCollider;

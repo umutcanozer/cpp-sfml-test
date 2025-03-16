@@ -28,7 +28,7 @@ Player::Player(float movementSpeed, float jumpForce) :
 	//left top width height
 	playerSprite.setTextureRect(playerAnimation.textureRect);
 	playerSprite.setOrigin(playerSprite.getGlobalBounds().width / 2, playerSprite.getGlobalBounds().height / 2);
-	playerSprite.setPosition({ 0.f, 100.f });
+	playerSprite.setPosition({ 0.f, 20.f });
 
 }
 
@@ -70,7 +70,7 @@ void Player::Update(float deltaTime)
 
 		//imageCount, switchTime, width, height, xOffset, yOffset, gap 
 		if (playerState == PState::Walk) {
-			animConfig = { 10, 0.2f, 26.f, 40.f, 42.f, 0.f, 120.f };
+			animConfig = { 10, 0.1f, 26.f, 40.f, 42.f, 0.f, 120.f };
 		}
 		else if (playerState == PState::Idle) {
 			animConfig = { 10, 0.1f, 24.f, 40.f, 42.f, 0.f, 120.f };  

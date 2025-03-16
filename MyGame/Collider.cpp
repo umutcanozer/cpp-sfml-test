@@ -68,6 +68,11 @@ bool Collider::CheckCollision(Collider& other, sf::Vector2f& direction, float fo
 	return false;
 }
 
+void Collider::UpdatePosition(sf::Vector2f newPos)
+{
+	col.setPosition(newPos);
+}
+
 Collider::~Collider()
 {
 	

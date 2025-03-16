@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Platform.h"
 #include "Player.h"
+#include "Projectile.h"
 
 static const float VIEW_HEIGHT = 512.f;
 
@@ -41,18 +42,36 @@ int main()
     int w = 1200; int h = 800;
     sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
     sf::View gameView(sf::Vector2f(0.f, 0.f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
-    sf::Clock tickClock;
 
+	sf::Texture backgroundTexture;
+	backgroundTexture.loadFromFile("assets/background_sprites/Background.png");
+	sf::Sprite background(backgroundTexture);
+	
+    sf::Vector2f viewSize = gameView.getSize();
+    float scaleX = viewSize.x / backgroundTexture.getSize().x;
+    float scaleY = viewSize.y / backgroundTexture.getSize().y;
+    background.setScale(scaleX, scaleY);
+    background.setPosition(gameView.getCenter().x - viewSize.x / 2,
+        gameView.getCenter().y - viewSize.y / 2);
+
+    sf::Clock tickClock;
     sf::Text stateText;
     sf::Font fontText;
     
-    Player player(150.f, 200.f);
-
-    sf::Texture platformTexture;
-    platformTexture.loadFromFile("assets/platform_sprites/box.png");
+    Player player(150.f, 150.f);
+    
     std::vector<Platform> platforms = {
-        {platformTexture, sf::Vector2f(0, 170.f)},
-        {platformTexture, sf::Vector2f(0, 25.f)}
+        {sf::Vector2f(0, 25.f)},
+        {sf::Vector2f(150, 25.f)},
+        {sf::Vector2f(150, 170.f)},
+        {sf::Vector2f(-150, 170.f)},
+        {sf::Vector2f(150, -120.f)},
+        {sf::Vector2f(-150, -120.f)},
+        {sf::Vector2f(-150, 25.f)},
+    };
+
+    std::vector<Projectile> projectiles = {
+        {50.f, sf::Vector2f(-100.f, 8.f)}
     };
     
 	sf::Vector2f direction;
@@ -83,19 +102,34 @@ int main()
         }
 
 		player.Update(deltaTime);
-        gameView.setCenter(player.GetPosition());
-        stateText.setString(std::to_string(player.GetVelocityY()));
 
+        for (auto& projectile : projectiles) {
+            projectile.Update(deltaTime);
+        }
+
+        stateText.setString(std::to_string(player.GetVelocityY()));
+ 
 		for (auto& platform : platforms) {
 			if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
                 player.OnCollision(direction);
 		}
 
+        for (auto& projectile : projectiles) {
+            if (projectile.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
+                projectiles.pop_back();
+        }
+
         window.clear();
         window.setView(gameView);
+		window.draw(background);
         for (auto& platform : platforms) {
 				platform.Draw(window);
         }
+
+        for (auto& projectile : projectiles) {
+            projectile.Draw(window);
+        }
+
 		player.Draw(window);
         window.draw(DisplayText(stateText, fontText));
         window.display();

@@ -10,6 +10,7 @@ public:
 	void Move(float dx, float dy) { col.move(dx, dy); }
 
 	bool CheckCollision(Collider& other, sf::Vector2f& direction, float force);
+	void UpdatePosition(sf::Vector2f newPos);
 	sf::Vector2f GetPosition() { return col.getPosition(); };
 	sf::Vector2f GetHalfSize() {
 		return sf::Vector2f(col.getGlobalBounds().width / 2.f, col.getGlobalBounds().height / 2.f);
