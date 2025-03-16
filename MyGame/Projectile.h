@@ -14,6 +14,7 @@ public:
 
 	sf::Sprite GetBody() { return projectileSprite; };
 	Collider& GetCollider() { return projectileCol; };
+	sf::Vector2f GetPosition() { return projectileSprite.getPosition(); };
 private:
 	sf::Sprite projectileSprite;
 	static sf::Texture projectileTexture;

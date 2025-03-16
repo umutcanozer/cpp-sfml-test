@@ -55,6 +55,8 @@ int main()
         gameView.getCenter().y - viewSize.y / 2);
 
     sf::Clock tickClock;
+    sf::Clock projectileSpawnClock;
+
     sf::Text stateText;
     sf::Font fontText;
     
@@ -70,14 +72,13 @@ int main()
         {sf::Vector2f(-150, 25.f)},
     };
 
-    std::vector<Projectile> projectiles = {
-        {50.f, sf::Vector2f(-100.f, 8.f)}
-    };
+    std::vector<std::unique_ptr<Projectile>> projectiles;
     
 	sf::Vector2f direction;
 
     while (window.isOpen())
     {
+        std::cout << "Toplam: " << projectiles.size() << std::endl; // DEBUG
         sf::Event e;
         
         sf::Time time = tickClock.restart();
@@ -101,10 +102,27 @@ int main()
             }      
         }
 
+        if (projectileSpawnClock.getElapsedTime().asSeconds() >= 2.f) {
+            if (projectiles.size() < 5) {
+                float spawnY = static_cast<float>(rand() % 400 - 200); 
+                float spawnX = -256.f; 
+
+                projectiles.push_back(std::make_unique<Projectile>(100.f, sf::Vector2f(spawnX, spawnY)));
+            }
+            projectileSpawnClock.restart();
+        }
+
 		player.Update(deltaTime);
 
-        for (auto& projectile : projectiles) {
-            projectile.Update(deltaTime);
+        for (auto it = projectiles.begin(); it != projectiles.end();) {
+            (*it)->Update(deltaTime);
+
+            if ((*it)->GetPosition().x > 256.f || (*it)->GetCollider().CheckCollision(player.GetCollider(), direction, 1.f)) {
+                it = projectiles.erase(it); // `unique_ptr` otomatik olarak nesneyi bellekten siliyor
+            }
+            else {
+                ++it;
+            }
         }
 
         stateText.setString(std::to_string(player.GetVelocityY()));
@@ -114,11 +132,6 @@ int main()
                 player.OnCollision(direction);
 		}
 
-        for (auto& projectile : projectiles) {
-            if (projectile.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
-                projectiles.pop_back();
-        }
-
         window.clear();
         window.setView(gameView);
 		window.draw(background);
@@ -127,7 +140,7 @@ int main()
         }
 
         for (auto& projectile : projectiles) {
-            projectile.Draw(window);
+            projectile->Draw(window);
         }
 
 		player.Draw(window);
