@@ -23,7 +23,7 @@ void MouseWheelEvent(const sf::Event& e) {
 }
 
 sf::Text DisplayText(sf::Text& text, sf::Font& font) {
-    if (!font.loadFromFile("arimo.ttf")) {
+    if (!font.loadFromFile("assets/arimo.ttf")) {
         std::cerr << "Font yüklenemedi!" << std::endl;
         return text;
     }
@@ -46,10 +46,10 @@ int main()
     sf::Text stateText;
     sf::Font fontText;
     
-    Player playerTest(150.f, 200.f);
+    Player player(150.f, 200.f);
 
     sf::Texture platformTexture;
-    platformTexture.loadFromFile("platform_sprites/box.png");
+    platformTexture.loadFromFile("assets/platform_sprites/box.png");
     std::vector<Platform> platforms = {
         {platformTexture, sf::Vector2f(0, 170.f)},
         {platformTexture, sf::Vector2f(0, 25.f)}
@@ -82,13 +82,13 @@ int main()
             }      
         }
 
-		playerTest.Update(deltaTime);
-        gameView.setCenter(playerTest.GetPosition());
-        stateText.setString(std::to_string(playerTest.GetVelocityY()));
+		player.Update(deltaTime);
+        gameView.setCenter(player.GetPosition());
+        stateText.setString(std::to_string(player.GetVelocityY()));
 
 		for (auto& platform : platforms) {
-			if (platform.GetCollider().CheckCollision(playerTest.GetCollider(), direction, 1.f))
-                playerTest.OnCollision(direction);
+			if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.f))
+                player.OnCollision(direction);
 		}
 
         window.clear();
@@ -96,7 +96,7 @@ int main()
         for (auto& platform : platforms) {
 				platform.Draw(window);
         }
-		playerTest.Draw(window);
+		player.Draw(window);
         window.draw(DisplayText(stateText, fontText));
         window.display();
     }

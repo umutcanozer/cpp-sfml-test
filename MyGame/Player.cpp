@@ -118,10 +118,10 @@ void Player::Draw(sf::RenderWindow& window)
 
 void Player::SetTexture()
 {
-    idleTexture.loadFromFile("soldier_sprites/_Idle.png");
-    walkTexture.loadFromFile("soldier_sprites/_Run.png");
-	jumpTexture.loadFromFile("soldier_sprites/_Jump.png");
-	fallTexture.loadFromFile("soldier_sprites/_Fall.png");
+    idleTexture.loadFromFile("assets/soldier_sprites/_Idle.png");
+    walkTexture.loadFromFile("assets/soldier_sprites/_Run.png");
+	jumpTexture.loadFromFile("assets/soldier_sprites/_Jump.png");
+	fallTexture.loadFromFile("assets/soldier_sprites/_Fall.png");
 
 	stateTextures[PState::Idle] = &idleTexture;
 	stateTextures[PState::Walk] = &walkTexture;
